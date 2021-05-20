@@ -91,7 +91,7 @@ class Xhgui_Db_Mapper
         }
 
         if (isset($search['userId'])) {
-            $conditions['meta.userId']  = (string)$search['userId'];
+            $conditions['meta.userId'] = (int)$search['userId'];
         }
 
         return $conditions;

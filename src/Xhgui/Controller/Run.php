@@ -17,7 +17,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $keys = array('date_start', 'date_end', 'url', 'userId');
         foreach ($keys as $key) {
             if ($request->get($key)) {
-                $search[$key] = $request->get($key);
+                $search[$key] = trim($request->get($key));
             }
         }
         $sort = $request->get('sort');
@@ -67,7 +67,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $keys = array('date_start', 'date_end');
         foreach ($keys as $key) {
             if ($request->get($key)) {
-                $search[$key] = $request->get($key);
+                $search[$key] = trim($request->get($key));
             }
         }
         $sort = $request->get('sort');
@@ -170,7 +170,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $search = array();
         $keys = array('date_start', 'date_end', 'limit', 'limit_custom');
         foreach ($keys as $key) {
-            $search[$key] = $request->get($key);
+            $search[$key] = trim($request->get($key));
         }
 
         $runs = $this->_profiles->getForUrl(
