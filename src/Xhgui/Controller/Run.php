@@ -14,7 +14,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $request = $this->_app->request();
 
         $search = array();
-        $keys = array('date_start', 'date_end', 'url');
+        $keys = array('date_start', 'date_end', 'url', 'userId');
         foreach ($keys as $key) {
             if ($request->get($key)) {
                 $search[$key] = $request->get($key);
@@ -70,12 +70,29 @@ class Xhgui_Controller_Run extends Xhgui_Controller
                 $search[$key] = $request->get($key);
             }
         }
+        $sort = $request->get('sort');
+        $direction = $request->get('direction');
+        $titleMap = array(
+            'row_count' => '调用次数',
+            'wt' => '执行时间(AVG)',
+            'cpu' => 'CPU时间(AVG)',
+            'mu' => '内存使用(AVG)',
+            'pmu' => '内存峰值(AVG)',
+        );
+        if (isset($titleMap[$sort])) {
+            $title = $titleMap[$sort];
+        }
+        $paging = array(
+            'sort' => $sort ?? '_id',
+            'direction' => $direction,
+        );
 
-        $runs = $this->_profiles->getDistinctAvgs($search);
+        $runs = $this->_profiles->getDistinctAvgs($search,$paging);
         $title = '平均统计';
 
         $this->_template = 'runs/distinct.twig';
         $this->set(array(
+            'paging' => $paging,
             'base_url' => 'run.distinct',
             'runs' => $runs,
             'search' => $search,

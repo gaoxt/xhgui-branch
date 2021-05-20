@@ -69,7 +69,6 @@ class Xhgui_Profiles
     public function paginate($options)
     {
         $opts = $this->_mapper->convert($options);
-
         $totalRows = $this->_collection->find(
             $opts['conditions'],
             array('_id' => 1))->count();
@@ -203,7 +202,7 @@ class Xhgui_Profiles
      * @param array $options
      * @return array
      */
-    public function getDistinctAvgs($options)
+    public function getDistinctAvgs($options,$paging)
     {
         $opts = $this->_mapper->convert($options);
 
@@ -212,6 +211,12 @@ class Xhgui_Profiles
         }
         if (isset($search['date_end'])) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
+        }
+
+        if($paging['direction'] == 'desc'){
+            $sortType = -1;
+        }else{
+            $sortType = 1;
         }
         $results = $this->_collection->aggregate(array(
             array(
@@ -234,7 +239,7 @@ class Xhgui_Profiles
                     'pmu' => '$pmu_times',
                 )
             ),
-            array('$sort' => array('_id' => 1)),
+            array('$sort' => array($paging['sort'] => $sortType)),
             ),
             array('cursor' => array('batchSize' => 0))
         );

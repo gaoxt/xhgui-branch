@@ -90,6 +90,10 @@ class Xhgui_Db_Mapper
             );
         }
 
+        if (isset($search['userId'])) {
+            $conditions['meta.userId']  = (string)$search['userId'];
+        }
+
         return $conditions;
     }
 

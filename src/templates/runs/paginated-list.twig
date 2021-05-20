@@ -8,7 +8,7 @@
                 <th>&nbsp;</th>
                 {% endif %}
                 <th>
-                  方法
+                  param
                 </th>
                 <th>请求地址</th>
                 <th>
@@ -52,7 +52,9 @@
             </td>
             {% endif %}
             <td>
-                {{result.meta('SERVER.REQUEST_METHOD')}}
+                {% for param in result.meta.get %}
+                    {{param}}
+                {% endfor %}
             </td>
             <td>
                 {% set addr = result.meta.url %}
