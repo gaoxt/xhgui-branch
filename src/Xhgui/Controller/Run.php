@@ -21,7 +21,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             }
         }
         $sort = $request->get('sort');
-
+        
         $result = $this->_profiles->getAll(array(
             'sort' => $sort,
             'page' => $request->get('page'),
@@ -47,7 +47,6 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'sort' => $sort,
             'direction' => $result['direction']
         );
-
         $this->_template = 'runs/list.twig';
 
         $this->set(array(
@@ -55,6 +54,30 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'base_url' => 'home',
             'runs' => $result['results'],
             'date_format' => $this->_app->config('date.format'),
+            'search' => $search,
+            'has_search' => strlen(implode('', $search)) > 0,
+            'title' => $title
+        ));
+    }
+
+    public function distinct()
+    {
+        $request = $this->_app->request();
+        $search = array();
+        $keys = array('date_start', 'date_end');
+        foreach ($keys as $key) {
+            if ($request->get($key)) {
+                $search[$key] = $request->get($key);
+            }
+        }
+
+        $runs = $this->_profiles->getDistinctAvgs($search);
+        $title = '平均统计';
+
+        $this->_template = 'runs/distinct.twig';
+        $this->set(array(
+            'base_url' => 'run.distinct',
+            'runs' => $runs,
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title

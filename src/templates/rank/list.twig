@@ -1,14 +1,22 @@
-{# Template fragment for outputting a list of runs #}
+{% extends 'layout/base.twig' %}
 {% import 'macros/helpers.twig' as helpers %}
+
+{% block title %}
+- Waterfall -
+{% endblock %}
+
+{% block content %}
+
+
 <div class="row-fluid">
     <table class="table table-hover">
         <thead>
             <tr>
                 {% if show_compare_link %}
-                <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                 {% endif %}
                 <th>
-                  方法
+                    方法
                 </th>
                 <th>请求地址</th>
                 <th>
@@ -20,7 +28,7 @@
                     </span>
                 </th>
                 <th class="right">
-                    <span class="tip" title="CPU时间">
+                    <span class="tip" title="CPU 时间">
                         {{ helpers.sort_link('CPU时间', base_url, 'cpu', paging, search) }}
                     </span>
                 </th>
@@ -47,26 +55,28 @@
             {% if show_compare_link %}
             <td>
                 <a class="btn btn-small" href="{{ url('run.compare', {base: base_run.id|trim, head: result.id|trim}) }}">
-                对比
+                Compare
                 </a>
             </td>
             {% endif %}
             <td>
+              <a href="{{ url('run.view', {'id': result.id|trim }) }}">
                 {{result.meta('SERVER.REQUEST_METHOD')}}
+              </a>
             </td>
             <td>
                 {% set addr = result.meta.url %}
                 {{ helpers.tip_link(
-                    addr,
-                    50,
-                    'url.view',
-                    {'url': result.meta.simple_url}
+                addr,
+                50,
+                'url.view',
+                {'url': result.meta.simple_url}
                 ) }}
             </td>
             <td>
-              <a href="{{ url('run.view', {'id': result.id|trim }) }}">
-                {{ result.meta.request_ts.sec|date(date_format) }}
-              </a>
+                <a href="{{ url('run.view', {'id': result.id|trim }) }}">
+                    {{ result.date|date(date_format) }}
+                </a>
             </td>
             <td class="right">{{ result.get('main()', 'wt') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
@@ -78,10 +88,31 @@
         {% else %}
         <tr>
             <td colspan="6" class="no-results">
-                你的搜索条件没有匹配的结果，改变搜索条件试试。
+                Your search conditions matched no runs. Try changing you search criteria.
             </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+
+
+
+{% endblock %}
+
+{% block jsfoot %}
+<script type="text/javascript" src="{{ static('js/waterfall.js') }}"></script>
+<script>
+$(document).ready(function() {
+    {% set query = {
+        remote_addr: search.remote_addr,
+        request_start: search.request_start,
+        request_end: search.request_end
+    } %}
+    Xhgui.waterfall('#waterfall', {
+        dataUrl: '{{ url("waterfall.data", query)|raw }}',
+        baseUrl: '{{ url("run.view") }}'
+    });
+});
+</script>
+{% endblock %}

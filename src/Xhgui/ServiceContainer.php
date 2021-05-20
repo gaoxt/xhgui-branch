@@ -124,6 +124,10 @@ class Xhgui_ServiceContainer extends Pimple
         $this['waterfallController'] = function ($c) {
             return new Xhgui_Controller_Waterfall($c['app'], $c['profiles']);
         };
+
+        $this['rankController'] = function ($c) {
+            return new Xhgui_Controller_Rank($c['app'], $c['profiles']);
+        };
     }
 
 }

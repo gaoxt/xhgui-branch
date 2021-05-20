@@ -1,0 +1,79 @@
+{# Template fragment for outputting a list of runs #}
+{% import 'macros/helpers.twig' as helpers %}
+<div class="row-fluid">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                {% if show_compare_link %}
+                <th>&nbsp;</th>
+                {% endif %}
+                <th>
+                  方法
+                </th>
+                <th>请求地址</th>
+                <th>
+                    {{ helpers.sort_link('调用次数', base_url, 'time', paging, search) }}
+                </th>
+                <th class="right">
+                    <span class="tip" title="执行时间(AVG)">
+                        {{ helpers.sort_link('执行时间(AVG)', base_url, 'wt', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="CPU时间(AVG)">
+                        {{ helpers.sort_link('CPU时间(AVG)', base_url, 'cpu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="内存占用(AVG)">
+                        {{ helpers.sort_link('内存占用(AVG)', base_url, 'mu', paging, search) }}
+                    </span>
+                </th>
+                <th class="right">
+                    <span class="tip" title="内存峰值(AVG)">
+                        {{ helpers.sort_link('内存峰值(AVG)', base_url, 'pmu', paging, search) }}
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in runs %}
+        <tr>
+            <td>
+            Proto
+            </td>
+            <td>
+                {% set addr = result.simple_url %}
+                {{ helpers.tip_link(
+                    addr,
+                    50,
+                    'url.view',
+                    {'url': result.simple_url}
+                ) }}
+            </td>
+            <td>
+             {% set addr = result.simple_url %}
+                {{ helpers.tip_link(
+                    result.row_count,
+                    50,
+                    'url.view',
+                    {'url': result.simple_url}
+                ) }}
+              </a>
+            </td>
+            <td class="right">{{ result.wt|as_time }}</td>
+            <td class="right">{{ result.cpu|as_time }}</td>
+            <td class="right">{{ result.mu|as_bytes }}</td>
+            <td class="right">{{ result.pmu|as_bytes }}</td>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="no-results">
+                你的搜索条件没有匹配的结果，改变搜索条件试试。
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

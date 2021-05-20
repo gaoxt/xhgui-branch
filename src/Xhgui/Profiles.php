@@ -196,6 +196,59 @@ class Xhgui_Profiles
     }
 
     /**
+     * getDistinctAvgs
+     *
+     * @Author gaoxi@TheDream.com
+     * @DateTime 2021-05-19 16:28:00
+     * @param array $options
+     * @return array
+     */
+    public function getDistinctAvgs($options)
+    {
+        $opts = $this->_mapper->convert($options);
+
+        if (isset($search['date_start'])) {
+            $match['meta.request_date']['$gte'] = (string)$search['date_start'];
+        }
+        if (isset($search['date_end'])) {
+            $match['meta.request_date']['$lte'] = (string)$search['date_end'];
+        }
+        $results = $this->_collection->aggregate(array(
+            array(
+                '$group' => array(
+                    '_id' => '$meta.simple_url',
+                    'row_count' => array('$sum' => 1),
+                    'wall_times' => array('$avg' => '$profile.main().wt'),
+                    'cpu_times' => array('$avg' => '$profile.main().cpu'),
+                    'mu_times' => array('$avg' => '$profile.main().mu'),
+                    'pmu_times' => array('$avg' => '$profile.main().pmu'),
+                )
+            ),
+            array(
+                '$project' => array(
+                    'simple_url' => '$date',
+                    'row_count' => '$row_count',
+                    'wt' => '$wall_times',
+                    'cpu' => '$cpu_times',
+                    'mu' => '$mu_times',
+                    'pmu' => '$pmu_times',
+                )
+            ),
+            array('$sort' => array('_id' => 1)),
+            ),
+            array('cursor' => array('batchSize' => 0))
+        );
+        if (empty($results['result'])) {
+            return array();
+        }
+        foreach ($results['result'] as $i => $result) {
+            $results['result'][$i]['simple_url'] = $result['_id'];
+            unset($results['result'][$i]['_id']);
+        }
+        return $results['result'];
+    }
+
+    /**
      * Get the Average metrics for a URL
      *
      * This will group data by date and returns only the

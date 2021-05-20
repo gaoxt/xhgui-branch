@@ -22,12 +22,14 @@
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li {% if title=='最近运行' %} class="current" {% endif %}><a href="{{ url('home') }}">最近运行</a></li>
+                        <li {% if title=='平均统计' %} class="current" {% endif %}><a href="{{ url('run.distinct') }}">平均统计</a></li>
                         <li {% if title=='执行时间' %} class="current" {% endif %}><a href="{{ url('home', {'sort': 'wt'}) }}">执行时间</a></li>
                         <li {% if title=='CPU时间' %} class="current" {% endif %}><a href="{{ url('home', {'sort': 'cpu'}) }}">CPU时间</a></li>
                         <li {% if title=='内存使用' %} class="current" {% endif %}><a href="{{ url('home', {'sort': 'mu'}) }}">内存使用</a></li>
                         <li {% if title=='自定义查询' %} class="current" {% endif %}><a href="{{ url('custom.view') }}">自定义查询</a></li>
                         <li {% if title=='函数监控' %} class="current" {% endif %}><a href="{{ url('watch.list') }}">函数监控</a></li>
                         <li {% if title=='瀑布图' %} class="current" {% endif %}><a href="{{ url('waterfall.list') }}">瀑布图</a></li>
+                        {# <li {% if title=='排行榜' %} class="current" {% endif %}><a href="{{ url('rank.list') }}">排行榜</a></li> #}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -46,7 +48,7 @@
         <hr>
 
         <footer class="row-fluid footer-text">
-            <span class="span4">© 版权所有 PHP性能分析平台 2013 - 2016</span>
+            <span class="span4">© 版权所有 PHP性能分析平台 2021</span>
             <span class="span4">1000 ms = 1 second</span>
         </footer>
     </div>

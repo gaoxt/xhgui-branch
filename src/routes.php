@@ -25,6 +25,11 @@ $app->get('/', function () use ($di, $app) {
     $app->controller->index();
 })->name('home');
 
+$app->get('/distinct', function () use ($di, $app) {
+    $app->controller = $di['runController'];
+    $app->controller->distinct();
+})->name('run.distinct');
+
 $app->get('/run/view', function () use ($di, $app) {
     $app->controller = $di['runController'];
     $app->controller->view();
@@ -108,3 +113,9 @@ $app->get('/waterfall', function () use ($di, $app) {
 $app->get('/waterfall/data', function () use ($di) {
     $di['waterfallController']->query();
 })->name('waterfall.data');
+
+//rank
+$app->get('/rank', function () use ($di, $app) {
+    $app->controller = $di['rankController'];
+    $app->controller->index();
+})->name('rank.list');
